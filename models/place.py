@@ -3,10 +3,8 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, ForeignKey, Float
 from sqlalchemy.orm import relationship
-from models import storage_type
 from models.review import Review
 from models.amenity import Amenity
-
 from os import getenv
 
 
@@ -31,7 +29,7 @@ class Place(BaseModel, Base):
                            cascade="all, delete, delete-orphan")
     amenity_ids = []
 
-    if storage_type != 'db':
+    if getenv('HBNB_TYPE_STORAGE') != 'db':
         @property
         def reviews(self):
             """Return a list of reviews instances"""

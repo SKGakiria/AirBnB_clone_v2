@@ -2,7 +2,8 @@
 """Module defines a base class for all models in our hbnb clone"""
 import uuid
 from datetime import datetime
-from models import storage_type
+#from models import storage_type
+from os import getenv
 from sqlalchemy import Column, String, DATETIME
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -35,7 +36,8 @@ class BaseModel:
                 elif key != '__class__':
                     setattr(self, key, kwargs[key])
 
-            if storage_type == 'db':
+            #if storage_type == 'db':
+            if getenv('HBNB_TYPE_STORAGE') == 'db':
                 if not hasattr(kwargs, 'id'):
                     setattr(self, 'id', str(uuid.uuid4()))
                     if not hasattr(kwargs, 'created_at'):
