@@ -30,7 +30,8 @@ class Place(BaseModel, Base):
     reviews = relationship("Review", backref="place",
                            cascade="all, delete, delete-orphan")
     amenity_ids = []
-    if storage_type != "db":
+
+    if storage_type != 'db':
         @property
         def reviews(self):
             """Return a list of reviews instances"""
