@@ -3,6 +3,8 @@
 from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+import models
+from models.base_model import BaseModel
 from models.base_model import Base
 from models.user import User
 from models.state import State

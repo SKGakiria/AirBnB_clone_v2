@@ -3,7 +3,7 @@
 import uuid
 from os import getenv
 from datetime import datetime
-from sqlalchemy import Column, String, DATETIME
+from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -18,8 +18,8 @@ class BaseModel:
         updated_at: The datetime of last update.
     """
     id = Column(String(60), primary_key=True, nullable=False)
-    created_at = Column(DATETIME, nullable=False, default=datetime.utcnow())
-    updated_at = Column(DATETIME, nullable=False, default=datetime.utcnow())
+    created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
 
     def __init__(self, *args, **kwargs):
         """Instantiates a new model"""
@@ -36,7 +36,7 @@ class BaseModel:
                 elif key != '__class__':
                     setattr(self, key, kwargs[key])
 
-            #if storage_type == 'db':
+            # if storage_type == 'db':
             if getenv('HBNB_TYPE_STORAGE') == 'db':
                 if not hasattr(kwargs, 'id'):
                     setattr(self, 'id', str(uuid.uuid4()))

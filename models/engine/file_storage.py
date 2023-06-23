@@ -19,6 +19,7 @@ class FileStorage:
                 if key.split('.')[0] == c_name:
                     newdict[key] = self.__objects[key]
             return newdict
+
     def new(self, obj):
         """Adds new object to storage dictionary"""
         self.__objects.update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
@@ -48,11 +49,11 @@ class FileStorage:
                     'Review': Review
                   }
         try:
-            temp = {}
-            with open(FileStorage.__file_path, 'r') as f:
-                temp = json.load(f)
-                for key, val in temp.items():
-                    self.all()[key] = classes[val['__class__']](**val)
+            with open(FileStorage.__file_path, "r", encoding="UTF8") as fd:
+                for val in json.load(fd).values():
+                    class_name = val["__class__"]
+                    del val["__class__"]
+                    self.new(eval(class_name)(**val))
         except FileNotFoundError:
             pass
 
