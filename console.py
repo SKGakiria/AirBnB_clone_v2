@@ -11,7 +11,6 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-from sqlalchemy import Column, String
 
 
 class HBNBCommand(cmd.Cmd):
@@ -117,41 +116,39 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        pattern = """(^\w+)((?:\s+\w+=[^\s]+)+)?"""
-        m = re.match(pattern, args)
-        args = [s for s in m.groups() if s] if m else []
-
+        line = args.split()
         if not args:
-            print("** class name missing **")
+            print("* class name missing *")
             return
-
-        className = args[0]
-
-        if className not in HBNBCommand.classes:
-            print("** class doesn't exist **")
+        elif len(line) == 1 and line[0] not in HBNBCommand.classes:
+            print("* class doesn't exist *")
             return
-
-        kwargs = dict()
-        if len(args) > 1:
-            params = args[1].split(" ")
-            params = [param for param in params if param]
-            for param in params:
-                [name, value] = param.split("=")
-                if value[0] == '"' and value[-1] == '"':
-                    value = value[1:-1].replace('_', ' ')
-                elif '.' in value:
+        new_instance = HBNBCommand.classes[line[0]]()
+        kwargs = {}
+        for item in line[1:]:
+            key, value = item.split("=")
+            # value = value.strip('"')
+            if value.startswith('"') and value.endswith('"'):
+                value = value.strip('"').replace('_', ' ')
+                kwargs[key] = str(value)
+            elif "." in value:
+                try:
                     value = float(value)
+                except ValueError:
+                    pass  # item not a valid float
                 else:
+                    kwargs[key] = value
+            else:
+                try:
                     value = int(value)
-                kwargs[name] = value
-
-        new_instance = HBNBCommand.classes[className]()
-        
-        for attrName, attrValue in kwargs.items():
-            setattr(new_instance, attrName, attrValue) 
-
+                except ValueError:
+                    pass  # skip values not in the types
+                else:
+                    kwargs[key] = value
+        new_instance.__dict__.update(**kwargs)
         new_instance.save()
         print(new_instance.id)
+        storage.save()
 
     def help_create(self):
         """ Help information for the create method """

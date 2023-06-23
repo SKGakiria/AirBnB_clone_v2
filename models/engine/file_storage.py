@@ -22,7 +22,7 @@ class FileStorage:
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
-        self.__objects.update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
+        self.__objects[f"{obj.__class__.__name__}.{obj.id}"] = obj
 
     def save(self):
         """Saves storage dictionary to file"""
@@ -49,11 +49,9 @@ class FileStorage:
                     'Review': Review
                   }
         try:
-            with open(FileStorage.__file_path, "r", encoding="UTF8") as fd:
-                for val in json.load(fd).values():
-                    class_name = val["__class__"]
-                    del val["__class__"]
-                    self.new(eval(class_name)(**val))
+            with open(FileStorage.__file_path, 'r') as f:
+                for obj in json.load(f).values():
+                    self.new(eval(obj["__class__"])(**obj))
         except FileNotFoundError:
             pass
 

@@ -13,14 +13,13 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 
-classes = {"User": User, "State": State, "City": City,
-           "Amenity": Amenity, "Place": Place, "Review": Review}
-
 
 class DBStorage:
     """Database storage engine for MySQL"""
     __engine = None
     __session = None
+    __clsdict = {"User": User, "State": State, "City": City,
+           "Amenity": Amenity, "Place": Place, "Review": Review}
 
     def __init__(self):
         """Instantiate the DBStorage instance"""
@@ -40,19 +39,18 @@ class DBStorage:
 
     def all(self, cls=None):
         """Querying all objects in the current database session"""
-        dict = {}
-        if cls is None:
-            for c_val in classes.items():
-                objs = self.__session.query(c_val).all()
-                for obj in objs:
-                    key = obj.__class__.__name__ + '.' + obj.id
-                    dict[key] = obj
-        else:
-            objs = self.__session.query(cls).all()
-            for obj in objs:
-                key = obj.__class__.__name__ + '.' + obj.id
-                dict[key] = obj
-        return dict
+        d = {}
+        cls = cls if not isinstance(cls, str) else self.__clsdict.get(cls)
+        if cls:
+            for obj in self.__session.query(cls):
+                d["{}.{}".format(
+                    cls._name_, obj.id
+                    )] = obj
+            return (d)
+        for k, cls in self.__clsdict.items():
+            for obj in self.__session.query(cls):
+                d["{}.{}".format(cls._name_, obj.id)] = obj
+        return (d)
 
     def new(self, obj):
         """Adds an object to the current database session"""
