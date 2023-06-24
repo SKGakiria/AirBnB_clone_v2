@@ -44,12 +44,12 @@ class DBStorage:
         if cls:
             for obj in self.__session.query(cls):
                 d["{}.{}".format(
-                    cls._name_, obj.id
+                    cls.__name__, obj.id
                     )] = obj
             return (d)
         for k, cls in self.__clsdict.items():
             for obj in self.__session.query(cls):
-                d["{}.{}".format(cls._name_, obj.id)] = obj
+                d["{}.{}".format(cls.__name__, obj.id)] = obj
         return (d)
 
     def new(self, obj):
