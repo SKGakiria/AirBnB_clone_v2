@@ -39,7 +39,7 @@ class BaseModel:
         if not self.id:
             self.id = str(uuid.uuid4())
 
-        t = datetime.now
+        t = datetime.now()
         if not self.created_at:
             self.created_at = t
             self.updated_at = t

@@ -123,7 +123,7 @@ class HBNBCommand(cmd.Cmd):
         elif len(line) == 1 and line[0] not in HBNBCommand.classes:
             print("* class doesn't exist *")
             return
-        new_instance = HBNBCommand.classes[line[0]]()
+        # new_instance = HBNBCommand.classes[line[0]]()
         kwargs = {}
         for item in line[1:]:
             key, value = item.split("=")
@@ -145,7 +145,8 @@ class HBNBCommand(cmd.Cmd):
                     pass  # skip values not in the types
                 else:
                     kwargs[key] = value
-        new_instance.__dict__.update(**kwargs)
+        new_instance = HBNBCommand.classes[line[0]](**kwargs)
+        # new_instance.__dict__.update(**kwargs)
         new_instance.save()
         print(new_instance.id)
         storage.save()
