@@ -36,6 +36,16 @@ class BaseModel:
                 elif key != '__class__':
                     setattr(self, key, kwargs[key])
 
+        if not self.id:
+            self.id = str(uuid.uuid4())
+
+        t = datetime.now
+        if not self.created_at:
+            self.created_at = t
+            self.updated_at = t
+        if not self.updated_at:
+            self.updated_at = t
+
             # if storage_type == 'db':
             if getenv('HBNB_TYPE_STORAGE') == 'db':
                 if not hasattr(kwargs, 'id'):
@@ -59,14 +69,13 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-        dict = self.__dict__.copy()
-        dict['__class__'] = self.__class__.__name__
-        for k in dict:
-            if type(dict[k]) is datetime:
-                dict[k] = dict[k].isoformat()
-        if '_sa_instance_state' in dict.keys():
-            del(dict['_sa_instance_state'])
-        return dict
+        my_dict = dict(self.__dict__)
+        my_dict["__class__"] = str(type(self).__name__)
+        my_dict["created_at"] = self.created_at.isoformat()
+        my_dict["updated_at"] = self.updated_at.isoformat()
+        if my_dict.get('_sa_instance_state'):
+            del my_dict['_sa_instance_state']
+        return my_dict
 
     def delete(self):
         """Deletes the current instance from the storage"""
