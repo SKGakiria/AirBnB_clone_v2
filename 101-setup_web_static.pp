@@ -4,19 +4,19 @@ $nginx_conf = "server {
     listen 80 default_server;
     listen [::]:80 default_server;
     add_header X-Served-By ${hostname};
-    root   /etc/nginx/html;
-    index  index.html;
+    root   /var/www/html;
+    index  index.html index.htm;
     location /hbnb_static {
         alias /data/web_static/current;
-        index index.html;
+        index index.html index.htm;
     }
     location /redirect_me {
         return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
     }
-    error_page 404 /error1.html;
-    location /error1 {
-             root /etc/nginx/html;
-             internal;
+    error_page 404 /404.html;
+    location /404 {
+      root /var/www/html;
+      internal;
     }
 }"
 
@@ -59,20 +59,20 @@ package { 'nginx':
   path => '/usr/bin/:/usr/local/bin/:/bin/'
 }
 
-file { '/etc/nginx/:
+file { '/var/www':
   ensure => 'directory'
 }
 
--> file { '/etc/nginx/html':
+-> file { '/var/www/html':
   ensure => 'directory'
 }
 
--> file { '/etc/nginx//html/index.html':
+-> file { '/var/www/html/index.html':
   ensure  => 'present',
-  content => "This is my first upload  in /etc/nginx//index.html***\n"
+  content => "Do hard things  in /var/www/index.html***\n"
 }
 
--> file { '/etc/nginx/html/error1.html':
+-> file { '/var/www/html/404.html':
   ensure  => 'present',
   content => "Ceci n'est pas une page - Error page\n"
 }
