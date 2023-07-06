@@ -3,6 +3,7 @@
 from fabric.api import env
 from fabric.api import put
 from fabric.api import run
+from datetime import datetime
 from os import path
 
 env.hosts = ['100.26.241.177', '54.158.210.1']
@@ -18,7 +19,7 @@ def do_deploy(archive_path):
         put(archive_path, '/tmp/')
         time_stamp = archive_path[-18:-4]
         run('sudo mkdir -p /data/web_static/\
-                releases/web_static_{}/'.format(timestamp))
+                releases/web_static_{}/'.format(time_stamp))
 
         run('sudo tar -xzf /tmp/web_static_{}.tgz -C \
                 /data/web_static/releases/web_static_{}/'
@@ -37,7 +38,7 @@ def do_deploy(archive_path):
 
         run('sudo ln -s /data/web_static/releases/\
                 web_static_{}/ /data/web_static/current'.format(time_stamp))
-        except Exception:
-            return False
+    except Exception:
+        return False
 
-        return True
+    return True

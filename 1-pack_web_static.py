@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Module to compress the contents of the web_static folder."""
 from fabric.api import local
+from datetime import date
 from time import strftime
 
 
