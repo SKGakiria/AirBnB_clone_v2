@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""Generates a .tgz archive from the contents of the web_static folder,
-using the function do_pack."""
+"""Module to compress the contents of the web_static folder."""
 from fabric.api import local
 from time import strftime
 
