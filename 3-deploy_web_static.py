@@ -10,19 +10,14 @@ env.user = 'ubuntu'
 
 def do_pack():
     """Function that generates tgz archive from web_static folder"""
-    dt = datetime.utcnow()
-    f_name = "versions/web_static_{}{}{}{}{}{}.tgz".format(dt.year,
-                                                           dt.month,
-                                                           dt.day,
-                                                           dt.hour,
-                                                           dt.minute,
-                                                           dt.second)
-    if os.path.isdir("versions") is False:
-        if local("mkdir -p versions").failed is True:
-            return None
-    if local("tar -cvzf {} web_static".format(f_name)).failed is True:
+    try:
+        local("mkdir -p versions")
+        local("tar -cvzf versions/web_static_{}.tgz web_static/".
+              format(time.strftime("%Y%m%d%H%M%S")))
+        return ("versions/web_static_{}.tgz".format(time.
+                                                    strftime("%Y%m%d%H%M%S")))
+    except Exception:
         return None
-    return f_name
 
 
 def do_deploy(archive_path):
