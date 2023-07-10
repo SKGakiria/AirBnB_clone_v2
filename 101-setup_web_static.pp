@@ -69,7 +69,7 @@ file { '/var/www':
 
 -> file { '/var/www/html/index.html':
   ensure  => 'present',
-  content => "Do hard things  in /var/www/index.html***\n"
+  content => "Nginx test in /var/www/index.html***\n"
 }
 
 -> file { '/var/www/html/404.html':

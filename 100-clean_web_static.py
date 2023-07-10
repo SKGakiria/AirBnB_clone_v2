@@ -5,7 +5,6 @@ from datetime import datetime
 from fabric.api import *
 
 env.hosts = ['100.26.241.177', '54.158.210.1']
-env.user = 'ubuntu'
 
 
 def do_clean(number=0):
