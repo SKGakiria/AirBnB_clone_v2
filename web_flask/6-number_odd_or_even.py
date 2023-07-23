@@ -2,7 +2,7 @@
 """Script that starts a Flask web application"""
 from flask import Flask, render_template
 
-app = Flask("__name__")
+app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
@@ -37,17 +37,15 @@ def num(n):
 
 
 @app.route('/number_template/<int:n>', strict_slashes=False)
-def number_template(n):
+def num_template(n):
     """Function displays a HTML page only if n is an integer"""
-    if isinstance(n, int):
-        return render_template("5-number.html", n=n)
+    return (render_template("5-number.html", num=n))
 
 
 @app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
-def number_odd_or_even(n):
+def num_odd_or_even(n):
     """Function displays a HTML page only if n is an integer"""
-    if isinstance(n, int):
-        return render_template("6-number_odd_or_even.html", n=n)
+    return (render_template("6-number_odd_or_even.html", num=n))
 
 
 if __name__ == "__main__":
