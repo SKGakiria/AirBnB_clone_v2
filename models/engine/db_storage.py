@@ -39,18 +39,19 @@ class DBStorage:
 
     def all(self, cls=None):
         """Querying all objects in the current database session"""
-        d = {}
-        cls = cls if not isinstance(cls, str) else self.__clsdict.get(cls)
-        if cls:
-            for obj in self.__session.query(cls):
-                d["{}.{}".format(
-                    cls.__name__, obj.id
-                    )] = obj
-            return (d)
-        for k, cls in self.__clsdict.items():
-            for obj in self.__session.query(cls):
-                d["{}.{}".format(cls.__name__, obj.id)] = obj
-        return (d)
+        dict = {}
+        if cls is None:
+            for elem in classes.values():
+                objs = self.__session.query(elem).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    dict[key] = obj
+        else:
+            objs = self.__session.query(cls).all()
+            for obj in objs:
+                key = obj.__class__.__name__ + '.' + obj.id
+                dict[key] = obj
+        return dict
 
     def new(self, obj):
         """Adds an object to the current database session"""
@@ -61,7 +62,7 @@ class DBStorage:
                 self.__session.refresh(obj)
             except Exception as ex:
                 self.__session.rollback()
-                raise ex
+                raise error
 
     def save(self):
         """Commits all changes of the current database session"""
@@ -79,3 +80,7 @@ class DBStorage:
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
         self.__session = scoped_session(session_factory)()
+
+    def close(self):
+        """Function disposes current session if active """
+        self.__session.close()

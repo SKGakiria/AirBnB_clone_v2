@@ -3,7 +3,7 @@
 from models.base_model import BaseModel, Base
 from models.city import City
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String
 from os import getenv
 import models
 
@@ -11,9 +11,16 @@ import models
 class State(BaseModel, Base):
     """Represents the State class"""
     __tablename__ = "states"
-    name = Column(String(128), nullable=False)
-    cities = relationship('City', backref='state',
-                          cascade='delete')
+    if getenv("HBNB_TYPE_STORAGE") == 'db':
+        name = Column(String(128), nullable=False)
+        cities = relationship('City', backref='state',
+                              cascade='delete')
+    else:
+        name = ""
+
+    def __init__(self, *args, **kwargs):
+        """initializes state"""
+        super().__init__(*args, **kwargs)
 
     if getenv("HBNB_TYPE_STORAGE") != "db":
         @property

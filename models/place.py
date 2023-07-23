@@ -54,6 +54,7 @@ class Place(BaseModel, Base):
         @property
         def amenities(self):
             """ Return a list of Amenities"""
+            from models import storage
             amenity_list = []
             for amenity in list(models.storage.all(Amenity).values()):
                 if amenity.id in self.amenity_ids:
