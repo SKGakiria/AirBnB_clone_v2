@@ -17,16 +17,7 @@ def td_database(self):
 def state_list():
     """Function that displays list of States"""
     states = storage.all(State)
-    return (render_template("9-states.html", states=states,
-            mode="all"))
-
-@app.route('/states/<id>', strict_slashes=False)
-def city_state_id(id):
-    """Function that displays list of cities linked to the state"""
-    for state in storage.all(State).values():
-        if state.id == id:
-            return render_template('9-states.html', states=state, mode='id')
-    return render_template('9-states.html', states=state, mode='none')
+    return (render_template("8-cities_by_states.html", states=states)
 
 
 if __name__ == "__main__":

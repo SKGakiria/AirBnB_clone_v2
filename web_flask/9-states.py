@@ -13,11 +13,21 @@ def td_database(self):
     storage.close()
 
 
-@app.route('/cities_by_states', strict_slashes=False)
-def cities_by_states():
-    """Function that displays list of States and Cities"""
+@app.route('/states', strict_slashes=False)
+def state_list():
+    """Function that displays list of States"""
     states = storage.all(State)
-    return (render_template("8-cities_by_states.html", states=states))
+    return (render_template("9-states.html", states=states,
+            mode="all"))
+
+
+@app.route('/states/<id>', strict_slashes=False)
+def city_state_id(id):
+    """Function that displays list of cities linked to the state"""
+    for state in storage.all(State).values():
+        if state.id == id:
+            return (render_template("9-states.html", states=state, mode='id'))
+    return (render_template("9-states.html", states=state, mode='none'))
 
 
 if __name__ == "__main__":
