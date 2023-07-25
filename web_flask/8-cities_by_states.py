@@ -13,11 +13,11 @@ def td_database(self):
     storage.close()
 
 
-@app.route('/states', strict_slashes=False)
-def state_list():
-    """Function that displays list of States"""
+@app.route('/cities_by_states', strict_slashes=False)
+def cities_state_list():
+    """Function that displays list of States and their Cities"""
     states = storage.all(State)
-    return (render_template("8-cities_by_states.html", states=states)
+    return (render_template("8-cities_by_states.html", states=states))
 
 
 if __name__ == "__main__":
